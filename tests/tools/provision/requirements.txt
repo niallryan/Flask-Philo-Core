@@ -1,0 +1,6 @@
+flask
+flask-cors
+simplejson
+JSON-log-formatter
+pytest
+ipdb
