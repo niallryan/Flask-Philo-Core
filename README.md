@@ -35,6 +35,8 @@ We are willing to hear about your suggestions and improvements.
 
 * Support for json validation provided by `jsonschema <https://github.com/Julian/jsonschema>`_.
 
+* Support for CORS protection provided by `flask-cors <https://flask-cors.readthedocs.io/en/latest/>`.
+
 
 ## Installation
 

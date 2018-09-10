@@ -1,8 +1,11 @@
 from flask_philo_core import init_app
 from flask_philo_core.exceptions import ConfigurationError
+from unittest.mock import MagicMock
+
 
 import os
 import pytest
+#import mock
 import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -11,6 +14,8 @@ sys.path.append(os.path.join(BASE_DIR, '../'))
 def create_app():
     os.environ['FLASK_PHILO_SETTINGS_MODULE'] = 'config.settings'
     return init_app(__name__, BASE_DIR)
+
+
 
 def test_app_creation():
     """
@@ -25,5 +30,4 @@ def test_app_creation():
 
     app = create_app()
     assert app is not None
-    assert 'TEST_CONFIG_PHILO' in app.config
     assert app.name == __name__
