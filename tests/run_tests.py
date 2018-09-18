@@ -15,8 +15,9 @@ def main():
 
     test_cmd = 'pytest -s -q /philo/tests/{}'.format(
         args.test)
-    #test_cmd = 'pip3 install flask-cors'
-    #print(test_cmd)
+
+    # test_cmd = 'pip3 install jsonschema'
+
     cmd = [
         'docker',
         'exec',
@@ -25,7 +26,6 @@ def main():
         'sh',
         '-c',
         test_cmd
-
     ]
 
     try:

@@ -16,7 +16,6 @@ def init_urls(app):
             app.add_url_rule(
                 route[0], view_func=route[1].as_view(route[2]))
 
-
 def init_cors(app):
     """
     Initializes cors protection if config

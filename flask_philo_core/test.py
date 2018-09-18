@@ -1,4 +1,9 @@
+from decimal import Decimal
+
 import flask
+import uuid
+import random
+import string
 #from flask_philo import app
 #from flask_philo.db.postgresql.orm import BaseModel
 #from flask_philo.db.postgresql import syncdb
@@ -21,41 +26,33 @@ class FlaskPhiloTestCase(object):
             'Content-Type': 'application/json'
         }
 
+    def update_urls(self):
+        init_urls(self.app)
 
-    def setup1(self):
-        self.client = app.test_client()
-        self.json_request_headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
 
-        if 'DATABASES' in app.config and\
-                'POSTGRESQL' in app.config['DATABASES']:
-            self.postgresql_pool = get_pool()
-            syncdb()
 
-        if 'DATABASES' in app.config and 'REDIS' in app.config['DATABASES']:
-            self.redis_pool = get_redis_pool()
+class BaseTestFactory(object):
+    @classmethod
+    def create_uuid(cls):
+        return uuid.uuid4()
 
-        if 'DATABASES' in app.config and\
-                'ELASTICSEARCH' in app.config['DATABASES']:
-            self.elasticsearch_pool = get_el_pool()
+    @classmethod
+    def create_unique_string(cls, prefix=None, n_range=20):
+        st = ''.join(
+            random.choice(
+                string.ascii_lowercase + string.digits)
+            for x in range(n_range))
 
-    def teardown1(self):
-        if 'DATABASES' in app.config and 'POSTGRESQL'\
-                in app.config['DATABASES']:
-            for t in reversed(BaseModel.metadata.sorted_tables):
-                sql = 'delete from {} cascade;'.format(t.name)
-                for c_name, conn in self.postgresql_pool.connections.items():
-                    conn.session.execute(sql)
-                    conn.session.commit()
+        if prefix:
+            return '{0}-{1}'.format(prefix, st)
+        else:
+            return '{0}'.format(st)
 
-        if 'DATABASES' in app.config and 'REDIS' in app.config['DATABASES']:
-            self.redis_pool.flushall()
+    @classmethod
+    def create_unique_email(cls):
+        return '{0}@{1}.com'.format(
+            cls.create_unique_string(), cls.create_unique_string())
 
-        if 'DATABASES' in app.config and\
-                'ELASTICSEARCH' in app.config['DATABASES']:
-            self.elasticsearch_pool.flushall()
-            for c_name, conn in self.elasticsearch_pool.connections.items():
-                for idx in conn.get_alias():
-                    conn.delete_index(idx)
+    @classmethod
+    def create_random_decimal(cls, n=10000):
+        return Decimal((random.randrange(n)/100))

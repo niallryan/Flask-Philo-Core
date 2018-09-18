@@ -3,4 +3,5 @@ flask-cors
 simplejson
 JSON-log-formatter
 pytest
+jsonschema
 ipdb

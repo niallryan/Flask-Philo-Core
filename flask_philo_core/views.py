@@ -9,52 +9,14 @@ class BaseView(MethodView):
         self.app = flask.current_app
         super(BaseView, self).__init__(*args, **kwargs)
 
-    def __init__1(self, *args, **kwargs):
-
-        # assign postgresql pool connections
-        if 'DATABASES' in flask.current_app.config and\
-                'POSTGRESQL' in flask.current_app.config['DATABASES']:
-            if hasattr(g, 'postgresql_pool'):
-                self.postgresql_pool = g.postgresql_pool
-
-        # assign redis pool connections
-        if 'DATABASES' in flask.current_app.config and 'REDIS' in flask.current_app.config['DATABASES']:
-            if hasattr(g, 'redis_pool'):
-                self.redis_pool = g.redis_pool
-
-        if 'JINJA2_TEMPLATES' in flask.current_app.config:
-            if hasattr(g, 'jinja2_template_manager'):
-                self.jinja2_template_manager = g.jinja2_template_manager
-        super(BaseView, self).__init__(*args, **kwargs)
-
     def json_response(self, status=200, data={}, headers={}):
         """
         Json response that allows headers injection
         """
-        '''
-          To set flask to inject specific headers on response request,
-          such as CORS_ORIGIN headers
-        '''
         mimetype = 'application/json'
-        header_dict = {}
-
-        for k, v in headers.items():
-            header_dict[k] = v
-
-        # setting custon headers for CORS origin
-        if flask.current_app.config.get("ALLOW_ORIGIN", None):
-            header_dict["Access-Control-Allow-Origin"] = flask.current_app.config["ALLOW_ORIGIN"] # noqa
-
-        if flask.current_app.config.get("ALLOW_HEADERS", None):
-            header_dict["Access-Control-Allow-Headers"] = flask.current_app.config["ALLOW_HEADERS"] # noqa
-
-        if flask.current_app.config.get("ALLOW_METHODS", None):
-            header_dict["Access-Control-Allow-Methods"] = flask.current_app.config["ALLOW_METHODS"] # noqa
         return Response(
-            json.dumps(data),
-            status=status,
-            mimetype=mimetype,
-            headers=header_dict)
+            json.dumps(data), status=status, mimetype=mimetype,
+            headers=headers)
 
     def render_template(self, template_name, engine_name='DEFAULT', **values):
         if not hasattr(self, 'jinja2_template_manager'):

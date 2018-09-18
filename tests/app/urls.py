@@ -6,5 +6,5 @@ from .test_views import (
 
 URLS = (
     ('/', SimpleView, 'home'),
-    ('/cors-api/*', SimpleCorsView, 'cors'),
+    ('/cors-api/test-cors', SimpleCorsView, 'cors'),
 )
