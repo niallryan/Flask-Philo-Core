@@ -2,7 +2,6 @@ from flask_philo_core import init_cors, init_urls
 from flask_philo_core.views import BaseView
 from flask_philo_core.test import FlaskPhiloTestCase
 from unittest.mock import patch
-from .test_app import create_app
 from flask import json
 
 
@@ -18,8 +17,7 @@ class SimpleCorsView(BaseView):
 
 class TestViews(FlaskPhiloTestCase):
     def setup(self):
-        self.app = create_app()
-        self.base_mock_config = {'URLS': 'app.urls'}
+        self.base_mock_config['URLS'] = 'app.urls'
         super(TestViews, self).setup()
 
     def test_simple_view(self):

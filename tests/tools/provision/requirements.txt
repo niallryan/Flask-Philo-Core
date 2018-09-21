@@ -4,4 +4,7 @@ simplejson
 JSON-log-formatter
 pytest
 jsonschema
+rfc3987
+strict-rfc3339
+webcolors
 ipdb

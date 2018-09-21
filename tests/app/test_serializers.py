@@ -3,7 +3,7 @@ from flask_philo_core.serializers import (
     uuid_schema, alphanumeric_schema, BaseSerializer
 )
 from .test_app import create_app
-
+from datetime import date, datetime
 from decimal import Decimal
 from flask import json
 from jsonschema.exceptions import ValidationError
@@ -11,6 +11,7 @@ from random import randint
 
 import pytest
 import uuid
+
 
 
 input_schema = {
@@ -66,6 +67,15 @@ transaction_schema = {
 }
 
 
+
+date_schema = {
+    'type': 'object',
+    'properties': {
+        'date': {'type': 'string', 'format': 'date'},
+        'date-time': {'type': 'string', 'format': 'date-time'}
+    }
+}
+
 class InputSerializer(BaseSerializer):
     _schema = input_schema
 
@@ -76,6 +86,10 @@ class OutputSerializer(BaseSerializer):
 
 class TransactionSerializer(BaseSerializer):
     _schema = transaction_schema
+
+
+class DateSerializer(BaseSerializer):
+    _schema = date_schema
 
 
 class TestSerializers(FlaskPhiloTestCase):
@@ -153,3 +167,15 @@ class TestSerializers(FlaskPhiloTestCase):
         k1 = output_data[0]['inner_output']['key']
         k2 = serializer.json['vout'][0]['inner_output']['key']
         assert  k1 == k2
+
+    def test_date_serializer(self):
+        date_data = {
+            'date': date.today(),
+            'date-time': datetime.utcnow()
+        }
+
+
+        with self.app.app_context():
+            serializer = DateSerializer(data=date_data)
+            assert serializer.json['date'] == date_data['date']
+            assert serializer.json['date-time'] == date_data['date-time']

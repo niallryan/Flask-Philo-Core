@@ -1,4 +1,5 @@
 from flask_philo_core import init_app, init_urls
+from flask_philo_core.test import create_test_app
 from flask_philo_core.exceptions import ConfigurationError
 from unittest.mock import patch
 
@@ -11,11 +12,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(os.path.join(BASE_DIR, '../'))
 
 
-@patch.dict(os.environ, {'FLASK_PHILO_SETTINGS_MODULE': 'config.settings'})
-def create_app():
-    return init_app(__name__, BASE_DIR)
-
-
 def test_app_creation():
     """
     Test if a Flask-Philo_Core app is created properly
@@ -25,16 +21,13 @@ def test_app_creation():
     with pytest.raises(ConfigurationError):
         init_app(__name__, BASE_DIR)
 
-    with patch.dict(
-            os.environ, {'FLASK_PHILO_SETTINGS_MODULE': 'config.settings'}):
-        app = create_app()
-        assert app is not None
-        assert app.name == __name__
+    app = create_test_app(__name__, BASE_DIR)
+    assert app is not None
+    assert app.name == __name__
 
 
 def test_init_urls():
-    os.environ['FLASK_PHILO_SETTINGS_MODULE'] = 'config.settings'
-    app = create_app()
+    app = create_test_app(__name__, BASE_DIR)
     assert 'URLS' not in app.config
 
     rules = [r for r in app.url_map.iter_rules()]

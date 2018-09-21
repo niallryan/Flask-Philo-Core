@@ -1,16 +1,21 @@
+from flask_philo_core import init_app
 from decimal import Decimal
+from unittest.mock import patch
 
 import flask
-import uuid
+import os
 import random
 import string
-#from flask_philo import app
-#from flask_philo.db.postgresql.orm import BaseModel
-#from flask_philo.db.postgresql import syncdb
-#from flask_philo.db.postgresql.connection import get_pool
-#from flask_philo.db.redis.connection import get_pool as get_redis_pool
-#from flask_philo.db.elasticsearch.connection import get_pool as get_el_pool
+import uuid
 
+def create_test_app(
+        name, base_dir, config_module='config.settings', config_dict={}):
+    patch(config_module, config_dict)
+
+    with patch.dict(
+        os.environ, {'FLASK_PHILO_SETTINGS_MODULE': config_module}):
+        app = init_app(name, base_dir)
+        return app
 
 class FlaskPhiloTestCase(object):
     """
@@ -18,8 +23,12 @@ class FlaskPhiloTestCase(object):
     """
 
     def setup(self):
-        if self.app is None:
-            self.app = flask.current_app
+        self.mock_config = {}
+    
+        self.app = create_test_app()
+
+
+
         self.client = self.app.test_client()
         self.json_request_headers = {
             'Accept': 'application/json',

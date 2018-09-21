@@ -1,12 +1,11 @@
 #from flask_philo import flask.current_app
-import flask
-from flask import abort, json, render_template, make_response, Response, g
+from flask import current_app, abort, json, render_template, make_response, Response
 from flask.views import MethodView
 
 
 class BaseView(MethodView):
     def __init__(self, *args, **kwargs):
-        self.app = flask.current_app
+        self.app = current_app._get_current_object()
         super(BaseView, self).__init__(*args, **kwargs)
 
     def json_response(self, status=200, data={}, headers={}):

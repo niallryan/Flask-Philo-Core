@@ -3,6 +3,7 @@ from decimal import Decimal
 from jsonschema import validate, FormatChecker
 from flask import json
 from .exceptions import SerializerError
+from flask_philo_core import utils
 import uuid
 
 from jsonschema.exceptions import ValidationError
@@ -57,6 +58,14 @@ class BaseSerializer(object):
                 'Can not build a serializer without an'
                 'http request or data dictionary associated')
 
+    def custom_converter(self, o):
+        if type(o) == uuid.UUID:
+            return str(o)
+        elif type(o) == date:
+            return utils.date_to_string(o)
+        elif type(o) == datetime:
+            return utils.datetime_to_string(o)
+
     def _validate(self):
         # avoid extra values not defined in the schema
         if 'additionalProperties' not in self._schema:
@@ -67,7 +76,10 @@ class BaseSerializer(object):
                 self._json_to_validate, self._schema,
                 format_checker=FormatChecker())
         except ValidationError as e:
-            if type(e.instance) == uuid.UUID:
+            instances = (
+                uuid.UUID, date, datetime
+            )
+            if type(e.instance) in instances:
                 # jsonchema can not deal with uuid validation
                 # so string conversion is a way to handle this
                 self._json_to_validate = json.loads(
@@ -75,6 +87,9 @@ class BaseSerializer(object):
             validate(
                 self._json_to_validate, self._schema,
                 format_checker=FormatChecker())
+        finally:
+            self._json_to_validate = None
+
 
     def _initialize_from_dict(self, data):
         """
@@ -96,4 +111,4 @@ class BaseSerializer(object):
         raise NotImplemented
 
     def dumps(self):
-        return json.dumps(self.json)
+        return json.dumps(self.json, default=self.custom_converter)
