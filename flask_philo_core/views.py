@@ -1,5 +1,5 @@
-#from flask_philo import flask.current_app
-from flask import current_app, abort, json, render_template, make_response, Response
+from flask import (
+    current_app, abort, json, render_template, make_response, Response)
 from flask.views import MethodView
 
 

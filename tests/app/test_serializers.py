@@ -2,7 +2,6 @@ from flask_philo_core.test import FlaskPhiloTestCase, BaseTestFactory
 from flask_philo_core.serializers import (
     uuid_schema, alphanumeric_schema, BaseSerializer
 )
-from .test_app import create_app
 from datetime import date, datetime
 from decimal import Decimal
 from flask import json
@@ -11,7 +10,6 @@ from random import randint
 
 import pytest
 import uuid
-
 
 
 input_schema = {
@@ -61,11 +59,11 @@ transaction_schema = {
         'key2': uuid_schema,
         'txid': alphanumeric_schema,
         'hash': alphanumeric_schema,
-        'vout': {'type': 'array', 'items': {'$ref': '#/definitions/vout_schema'}},
+        'vout':
+            {'type': 'array', 'items': {'$ref': '#/definitions/vout_schema'}},
         'vin': {'$ref': '#/definitions/vin_schema'},
     }
 }
-
 
 
 date_schema = {
@@ -75,6 +73,7 @@ date_schema = {
         'date-time': {'type': 'string', 'format': 'date-time'}
     }
 }
+
 
 class InputSerializer(BaseSerializer):
     _schema = input_schema
@@ -94,7 +93,6 @@ class DateSerializer(BaseSerializer):
 
 class TestSerializers(FlaskPhiloTestCase):
     def setup(self):
-        self.app = create_app()
         super(TestSerializers, self).setup()
 
     def test_simple_object(self):
@@ -127,8 +125,8 @@ class TestSerializers(FlaskPhiloTestCase):
         payload = serializer.dumps()
         serializer2 = OutputSerializer(payload=payload)
         assert serializer2.json.keys() == serializer.json.keys()
-        assert Decimal == type(serializer.json['value'])
-        assert Decimal == type(serializer2.json['value'])
+        assert isinstance(serializer.json['value'], Decimal)
+        assert isinstance(serializer2.json['value'], Decimal)
 
     def test_nested_object(self):
         input_data = {
@@ -166,14 +164,13 @@ class TestSerializers(FlaskPhiloTestCase):
         serializer = TransactionSerializer(data=tx_data)
         k1 = output_data[0]['inner_output']['key']
         k2 = serializer.json['vout'][0]['inner_output']['key']
-        assert  k1 == k2
+        assert k1 == k2
 
     def test_date_serializer(self):
         date_data = {
             'date': date.today(),
             'date-time': datetime.utcnow()
         }
-
 
         with self.app.app_context():
             serializer = DateSerializer(data=date_data)

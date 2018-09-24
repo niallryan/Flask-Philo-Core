@@ -1,43 +1,43 @@
-from flask_philo_core import init_app
+from flask_philo_core import init_app, init_urls
 from decimal import Decimal
 from unittest.mock import patch
 
-import flask
 import os
 import random
 import string
 import uuid
 
-def create_test_app(
-        name, base_dir, config_module='config.settings', config_dict={}):
-    patch(config_module, config_dict)
 
-    with patch.dict(
-        os.environ, {'FLASK_PHILO_SETTINGS_MODULE': config_module}):
-        app = init_app(name, base_dir)
-        return app
+def create_test_app(name, base_dir, config_dict={}):
+    app = init_app(name, base_dir)
+    with patch.dict(app.config, config_dict):
+        init_urls(app)
+    return app
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
 
 class FlaskPhiloTestCase(object):
     """
     This tests should be used when testing views
     """
+    mock_config = {}
 
     def setup(self):
-        self.mock_config = {}
-    
-        self.app = create_test_app()
-
-
-
-        self.client = self.app.test_client()
-        self.json_request_headers = {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
+        with patch.dict(
+            os.environ, {
+                'FLASK_PHILO_SETTINGS_MODULE': 'config.settings'}):
+            self.app = create_test_app(
+                __name__, BASE_DIR, config_dict=self.mock_config)
+            self.client = self.app.test_client()
+            self.json_request_headers = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
 
     def update_urls(self):
         init_urls(self.app)
-
 
 
 class BaseTestFactory(object):

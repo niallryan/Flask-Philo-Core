@@ -1,11 +1,37 @@
-from flask import Flask
-
+from flask import Flask, json
+from flask.globals import g, request
 from . import default_settings
 from .exceptions import ConfigurationError
 from .logger import init_logging
+from .jinja2 import create_environment as create_philo_env
 
 import importlib
 import os
+
+
+
+class PhiloFlask(Flask):
+    def create_jinja_environment(self):
+        """Overrides Flask `create_jinja_environment` function to add
+        support for custom extensions
+        """
+        if 'JINJA2_TEMPLATES' not in self.config:
+            # If not custom configuration, jinja will initialize with
+            # Flask defaults
+            return super(PhiloFlask, self).create_jinja_environment()
+        else:
+            rv = create_philo_env(**self.config['JINJA2_TEMPLATES'])
+            rv.globals.update(
+                config=self.config,
+                # request, session and g are normally added with the
+                # context processor for efficiency reasons but for imported
+                # templates we also want the proxies in there.
+                request=request,
+                g=g
+            )
+            rv.filters['tojson'] = json.tojson_filter
+            return rv
+
 
 
 def init_urls(app):
@@ -15,6 +41,7 @@ def init_urls(app):
         for route in urls_module.URLS:
             app.add_url_rule(
                 route[0], view_func=route[1].as_view(route[2]))
+
 
 def init_cors(app):
     """
@@ -48,14 +75,13 @@ def init_config(app, base_dir):
         app.config[v] = getattr(settings, v)
 
 
-
 def init_app(module, base_dir):
     """
     Initalize an app, call this method once from start_app
     Implements Application Factory concept described at
     http://flask.pocoo.org/docs/1.0/patterns/appfactories/#app-factories
     """
-    app = Flask(module)
+    app = PhiloFlask(module)
     init_config(app, base_dir)
     init_logging(app)
     init_urls(app)

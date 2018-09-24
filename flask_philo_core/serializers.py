@@ -21,7 +21,6 @@ alphanumeric_schema = {
 }
 
 
-
 class BaseSerializer(object):
     """
     Base serializer
@@ -89,7 +88,6 @@ class BaseSerializer(object):
                 format_checker=FormatChecker())
         finally:
             self._json_to_validate = None
-
 
     def _initialize_from_dict(self, data):
         """
