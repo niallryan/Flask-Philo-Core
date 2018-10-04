@@ -11,6 +11,7 @@ DEFAULT_AUTOESCAPING = {
     'default': False
 }
 
+
 def load_extensions_from_config(**config):
     """
     Loads extensions
@@ -23,6 +24,7 @@ def load_extensions_from_config(**config):
             except Exception as e:
                 print(e)
     return extensions
+
 
 def get_autoescaping_params(**config):
     if 'AUTOESCAPING' in config:

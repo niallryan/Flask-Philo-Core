@@ -3,7 +3,6 @@ from decimal import Decimal
 from jsonschema import validate, FormatChecker
 from flask import json
 from .exceptions import SerializerError
-from flask_philo_core import utils
 import uuid
 
 from jsonschema.exceptions import ValidationError
@@ -61,9 +60,9 @@ class BaseSerializer(object):
         if type(o) == uuid.UUID:
             return str(o)
         elif type(o) == date:
-            return utils.date_to_string(o)
+            return o.isoformat()
         elif type(o) == datetime:
-            return utils.datetime_to_string(o)
+            return o.astimezone().isoformat()
 
     def _validate(self):
         # avoid extra values not defined in the schema

@@ -1,13 +1,15 @@
 from flask import Flask, json
 from flask.globals import g, request
 from . import default_settings
+from . import philo_commands
 from .exceptions import ConfigurationError
 from .logger import init_logging
 from .jinja2 import create_environment as create_philo_env
 
+import argparse
 import importlib
 import os
-
+import sys
 
 
 class PhiloFlask(Flask):
@@ -31,7 +33,6 @@ class PhiloFlask(Flask):
             )
             rv.filters['tojson'] = json.tojson_filter
             return rv
-
 
 
 def init_urls(app):
@@ -87,3 +88,49 @@ def init_app(module, base_dir):
     init_urls(app)
     init_cors(app)
     return app
+
+
+def execute_command(cmd, **kwargs):
+    """
+    execute a console command
+    """
+    cmd_dict = {}
+    for cm in philo_commands.__all__:
+        if not cm.startswith('_'):
+            cmd_dict[cm] = 'flask_philo_core.philo_commands.' + cm
+
+
+    # loading specific app commands
+    try:
+        import commands
+        for cm in commands.__all__:
+            if not cm.startswith('_'):
+                cmd_dict[cm] = 'commands.' + cm
+    except Exception:
+        pass
+
+    if cmd not in cmd_dict:
+        raise ConfigurationError('command {} does not exists'.format(cmd))
+
+    cmd_module = importlib.import_module(cmd_dict[cmd])
+    cmd_module.run()
+
+
+
+def run():
+    BASE_DIR = os.getcwd()
+    sys.path.append(os.path.join(BASE_DIR, './'))
+
+    description = 'Manage Flask-Philo application'
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('command', help='command to execute')
+    parser.add_argument(
+        '--settings', help='config file path', default='config.settings')
+
+    args, extra_params = parser.parse_known_args()
+    os.environ.setdefault('FLASK_PHILO_SETTINGS_MODULE', args.settings)
+
+    app = init_app(__name__, BASE_DIR)
+
+    with app.app_context():
+        execute_command(args.command)

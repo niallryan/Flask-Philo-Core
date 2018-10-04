@@ -17,12 +17,8 @@ class BaseView(MethodView):
             json.dumps(data), status=status, mimetype=mimetype,
             headers=headers)
 
-    def render_template(self, template_name, engine_name='DEFAULT', **values):
-        if not hasattr(self, 'jinja2_template_manager'):
-            return render_template(template_name, **values)
-        else:
-            return self.jinja2_template_manager.render(
-                template_name, **values)
+    def render_template(self, template_name, **values):
+        return render_template(template_name, **values)
 
     def template_response(self, template_name, headers={}, **values):
         """

@@ -16,7 +16,7 @@ def main():
     test_cmd = 'pytest -s -q /philo/tests/{}'.format(
         args.test)
 
-    # test_cmd = 'pip3 install jsonschema'
+    #test_cmd = 'pip3 install  webcolors'
 
     cmd = [
         'docker',

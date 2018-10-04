@@ -92,8 +92,6 @@ class DateSerializer(BaseSerializer):
 
 
 class TestSerializers(FlaskPhiloTestCase):
-    def setup(self):
-        super(TestSerializers, self).setup()
 
     def test_simple_object(self):
         data = {
@@ -172,7 +170,8 @@ class TestSerializers(FlaskPhiloTestCase):
             'date-time': datetime.utcnow()
         }
 
-        with self.app.app_context():
-            serializer = DateSerializer(data=date_data)
-            assert serializer.json['date'] == date_data['date']
-            assert serializer.json['date-time'] == date_data['date-time']
+        serializer = DateSerializer(data=date_data)
+        assert serializer.json['date'] == date_data['date']
+        assert serializer.json['date-time'] == date_data['date-time']
+
+        serializer.json
