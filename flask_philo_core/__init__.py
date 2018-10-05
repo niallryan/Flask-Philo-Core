@@ -99,7 +99,6 @@ def execute_command(cmd, **kwargs):
         if not cm.startswith('_'):
             cmd_dict[cm] = 'flask_philo_core.philo_commands.' + cm
 
-
     # loading specific app commands
     try:
         import commands
@@ -114,7 +113,6 @@ def execute_command(cmd, **kwargs):
 
     cmd_module = importlib.import_module(cmd_dict[cmd])
     cmd_module.run()
-
 
 
 def run():

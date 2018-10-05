@@ -12,7 +12,6 @@ def create_from_template(**data):
 
     template_parameters = data.get('template_parameters', {})
 
-
     with open(resource_path, 'r') as f:
         t = Template(f.read())
         template = t.render(**template_parameters)
@@ -95,9 +94,7 @@ def initialize_src(location):
             'filename': '__init__.py',
         })
 
-
     initialize_app()
-
 
 
 def start_project():
@@ -129,7 +126,6 @@ def start_project():
         'filename': 'README.md',
     })
 
-
     philo_extensions = (
         'Flask-Philo-SQLAlchemy', 'Flask-Philo-Redis',
         'Flask-Philo-Elasticsearch'
@@ -149,7 +145,6 @@ def start_project():
             elif 'yes' == r.lower():
                 project_extensions.append(ext)
         ask(ext)
-
 
     # Docker environments
     create_docker_files(location, project_extensions)
