@@ -21,8 +21,8 @@ jobs:
             curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
             chmod +x ~/docker-compose
             sudo mv ~/docker-compose /usr/local/bin/docker-compose
-            sudo pip3 install -r ~/circleci-flaskphilo-core/tests/tools/provision/requirements.txt
-            sudo pip3 install flake8
+            pip3 install -r ~/circleci-flaskphilo-core/tests/tools/provision/requirements.txt
+            pip3 install flake8
        
       - run:
           name: Check Secret leak
@@ -69,12 +69,12 @@ jobs:
       - checkout
       - run:
           command: |
-            sudo pip3 install --upgrade setuptools
+            pip3 install --upgrade setuptools
             sed -i "s/USER/$RIFF_USER/g" .pypirc 
             sed -i "s/PASS/$RIFF_PASS/g" .pypirc 
             sed -i "s/GITHUB_TAG/$CIRCLE_TAG/" setup-circle.py 
             cp .pypirc ~
-            sudo python3 setup.py sdist upload -r pypi
+            python3 setup.py sdist upload -r pypi
 
 workflows:
   version: 2
