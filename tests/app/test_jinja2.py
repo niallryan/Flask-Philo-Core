@@ -31,6 +31,7 @@ class SimpleView(BaseView):
         return self.render_template(
             template_name, template_location=template_location)
 
+
 URLS = (
     ('/<template_location>', SimpleView, 'home'),
 )

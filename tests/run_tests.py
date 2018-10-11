@@ -16,7 +16,7 @@ def main():
     test_cmd = 'pytest -s -q /philo/tests/{}'.format(
         args.test)
 
-    #test_cmd = 'pip3 install  webcolors'
+    # test_cmd = 'pip3 install  webcolors'
 
     cmd = [
         'docker',
@@ -33,6 +33,7 @@ def main():
 
     except Exception:
         subprocess.run(cmd)
+
 
 if __name__ == '__main__':
     main()
