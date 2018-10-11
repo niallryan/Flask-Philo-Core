@@ -1,0 +1,91 @@
+defaults: &defaults
+  docker:
+    - image: circleci/python:3.4-jessie-browsers
+
+    - image: circleci/postgres:9.4.12-alpine
+      environment:
+      - POSTGRES_USER: ubuntu
+      - POSTGRES_DB: circle_test
+
+version: 2.0
+
+jobs:
+  install_and_build:
+    <<: *defaults
+    working_directory: ~/circleci-flaskphilo-core
+    steps:
+      - checkout
+      - run: 
+          name: Dependencies
+          command: |
+            git clone https://github.com/awslabs/git-secrets.git && cd git-secrets && sudo make install
+            git secrets --register-aws ; git secrets --add '\-{5}BEGIN\ RSA\ PRIVATE\ KEY-{5}' ; git secrets --scan --scan-history -r .
+            sudo pip3 install -r ~/circleci-flaskphilo-core/tests/tools/provision/requirements.txt
+            sudo pip3 install flake8
+      - run:
+          command: |
+            sudo apt-get install -y postgresql-client
+            sleep 10 && wget --waitretry=5 --retry-connrefused -v http://127.0.0.1:9200/
+            psql -h localhost -p 5432 -U postgres -c "CREATE ROLE ds WITH ENCRYPTED PASSWORD 'dsps';"
+            psql -h localhost -p 5432 -U postgres -c "ALTER ROLE ds WITH ENCRYPTED PASSWORD 'dsps'";
+            psql -h localhost -p 5432 -U postgres  -c "ALTER ROLE ds SET client_encoding TO 'utf8';"
+            psql -h localhost -p 5432 -U postgres  -c "ALTER ROLE ds  WITH LOGIN;"
+            psql -h localhost -p 5432 -U postgres  -c "ALTER ROLE ds SET default_transaction_isolation TO 'read committed';"
+            psql -h localhost -p 5432 -U postgres  -c "ALTER ROLE ds SET timezone TO 'UTC';"
+            psql -h localhost -p 5432 -U postgres  -c "CREATE DATABASE ds;"
+            psql -h localhost -p 5432 -U postgres  -c "CREATE DATABASE ds_test;"
+            psql -h localhost -p 5432 -U postgres  -c "ALTER DATABASE ds OWNER TO ds;"
+            psql -h localhost -p 5432 -U postgres  -c "ALTER DATABASE ds_test OWNER TO ds;"
+            psql -h localhost -p 5432 -U postgres  -c "GRANT ALL PRIVILEGES ON DATABASE ds to ds;"
+            psql -h localhost -p 5432 -U postgres  -c "GRANT ALL PRIVILEGES ON DATABASE ds_test to ds;"
+            psql -h localhost -p 5432 -U postgres  -c "CREATE DATABASE ds2;"
+            psql -h localhost -p 5432 -U postgres  -c "CREATE DATABASE ds2_test;"
+            psql -h localhost -p 5432 -U postgres  -c "ALTER DATABASE ds2 OWNER TO ds;"
+            psql -h localhost -p 5432 -U postgres  -c "ALTER DATABASE ds2_test OWNER TO ds;"
+            psql -h localhost -p 5432 -U postgres  -c "GRANT ALL PRIVILEGES ON DATABASE ds2 to ds;"
+            psql -h localhost -p 5432 -U postgres  -c "GRANT ALL PRIVILEGES ON DATABASE ds2_test to ds;"
+            flake8 --exclude build,bin ./
+            cd ~/circleci-flaskphilo-core/tests; python3 run_tests.py 
+
+  deployment_production:
+    <<: *defaults
+    working_directory: ~/circleci-flaskphilo-core
+    steps:
+      - checkout
+      - run:
+          command: |
+            sudo pip3 install --upgrade setuptools
+            sed -i "s/USER/$RIFF_USER/g" .pypirc 
+            sed -i "s/PASS/$RIFF_PASS/g" .pypirc 
+            sed -i "s/GITHUB_TAG/$CIRCLE_TAG/" setup-circle.py 
+            cp .pypirc ~
+            sudo python3 setup.py sdist upload -r pypi
+
+workflows:
+  version: 2
+
+  build-only:
+    jobs:
+      - install_and_build:
+          filters:
+            branches:
+              ignore:
+                - dev
+                - /feature\/.*
+  build-and-deploy-production:
+    jobs:
+      - install_and_build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /[0-9]*\..*/
+
+      - deployment_production:
+          requires:
+            - install_and_build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /[0-9]*\..*/
