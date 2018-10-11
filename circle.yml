@@ -9,6 +9,11 @@ jobs:
     working_directory: ~/circleci-flaskphilo-core
     steps:
       - checkout
+      - run:
+          name: Preparing env
+          command: |
+              pyenv install 3.6.3
+              pyenv global 3.6.3
       - run: 
           name: Dependencies
           command: |
