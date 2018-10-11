@@ -14,11 +14,16 @@ def main():
     test_cmd = "pytest -s -q /philo/tests/{}".format(
         args.test)
 
-    # test_cmd = 'pip3 install  webcolors'
-
-    cmd_entrypoint = "docker-compose run --rm --volume={}/../:/philo python sh -c".format(os.getcwd())
-    cmd = cmd_entrypoint.split(" ")
-    cmd.append(test_cmd)
+    cmd = [
+        "docker-compose",
+        "run",
+        "--rm",
+        "--volume={}/../:/philo".format(os.getcwd()),
+        "python",
+        "sh",
+        "-c",
+        test_cmd
+    ]
 
     try:
         subprocess.call(cmd)
