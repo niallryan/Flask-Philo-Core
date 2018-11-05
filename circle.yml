@@ -58,7 +58,7 @@ jobs:
             pip3 install --upgrade setuptools
             sed -i "s/USER/$RIFF_USER/g" .pypirc 
             sed -i "s/PASS/$RIFF_PASS/g" .pypirc 
-            sed -i "s/version=".*",/version=\'${CIRCLE_TAG/}\',/" setup.py
+            sed -i "s/version=".*",/version=\'${CIRCLE_TAG}\',/" setup.py
             cp .pypirc ~
             python3 setup.py sdist upload -r pypi
 
