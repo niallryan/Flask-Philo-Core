@@ -49,11 +49,16 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Preparing env
+          command: |
+              pyenv install 3.6.3
+              pyenv global 3.6.3
+      - run:
           command: |
             pip3 install --upgrade setuptools
             sed -i "s/USER/$RIFF_USER/g" .pypirc 
             sed -i "s/PASS/$RIFF_PASS/g" .pypirc 
-            sed -i "s/GITHUB_TAG/$CIRCLE_TAG/" setup-circle.py 
+            sed -i "s/version=".*",/version=\'${CIRCLE_TAG/}\',/" setup.py
             cp .pypirc ~
             python3 setup.py sdist upload -r pypi
 

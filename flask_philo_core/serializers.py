@@ -105,7 +105,7 @@ class BaseSerializer(object):
 
     @json.setter
     def set_json(self, value):
-        raise NotImplemented
+        raise NotImplementedError
 
     def dumps(self):
         return json.dumps(self.json, default=self.custom_converter)
