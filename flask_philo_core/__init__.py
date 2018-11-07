@@ -1,5 +1,6 @@
 from flask import Flask, json
 from flask.globals import g, request
+
 from . import default_settings
 from . import philo_commands
 from .exceptions import ConfigurationError
@@ -12,7 +13,25 @@ import os
 import sys
 
 
+class GenericSingleton:
+    """
+    Singleton pattern
+    """
+    _shared_state = {}
+
+    def __init__(self):
+        self.__dict__ = self._shared_state
+
+
+class Plugins(GenericSingleton):
+    def __init__(self):
+        super(Plugins, self).__init__()
+        self.flask_philo_sqlalchemy = None
+
+
 class PhiloFlask(Flask):
+    plugins = Plugins()
+
     def create_jinja_environment(self):
         """Overrides Flask `create_jinja_environment` function to add
         support for custom extensions
@@ -76,6 +95,17 @@ def init_config(app, base_dir):
         app.config[v] = getattr(settings, v)
 
 
+def init_dbs(app):
+    """
+    Initializes database configurations if extensions
+    are included
+    """
+    if 'Flask-Philo-SQLAlchemy' in app.config['FLASK_PHILO_EXTENSIONS']:
+        from flask_philo_sqlalchemy.connection import create_pool
+        with app.app_context():
+            create_pool()
+
+
 def init_app(module, base_dir):
     """
     Initalize an app, call this method once from start_app
@@ -87,6 +117,7 @@ def init_app(module, base_dir):
     init_logging(app)
     init_urls(app)
     init_cors(app)
+    init_dbs(app)
     return app
 
 

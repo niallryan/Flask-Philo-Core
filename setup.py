@@ -10,7 +10,7 @@ flask projects, json validation and unit testing.
 
 setup(
     name='Flask-Philo-Core',
-    version='1.0.0',
+    version='0.2.0',
     description='Flask extension that provides a common framework for webapps',
     long_description='',
     packages=[
