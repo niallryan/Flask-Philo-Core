@@ -11,4 +11,4 @@ HOST = '127.0.0.1'
 
 PORT = 8080
 
-# CRYP_SALT = gen_salt.run(print_salt=False)
+FLASK_PHILO_EXTENSIONS = ()

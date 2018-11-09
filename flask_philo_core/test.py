@@ -1,4 +1,4 @@
-from flask_philo_core import init_app, init_urls
+from flask_philo_core import init_app
 from decimal import Decimal
 from unittest.mock import Mock, patch
 
@@ -18,6 +18,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 class FlaskPhiloTestCase(object):
+    config = {}
+    urls = ()
+
     """
     This tests should be used when testing views
     """
@@ -26,8 +29,9 @@ class FlaskPhiloTestCase(object):
         'Content-Type': 'application/json'
     }
 
-    def update_urls(self):
-        init_urls(self.app)
+    def setup(self):
+        self.app = BaseTestFactory.create_test_app(
+            config=self.config, urls=self.urls)
 
 
 class BaseTestFactory(object):
