@@ -62,7 +62,6 @@ Flask-Philo-Core installation is pretty straightforward:
 
 
 
-
 Creating a new project
 ######################
 
@@ -75,8 +74,62 @@ To quickly generate a new Flask-Philo project, navigate to the directory in whic
     $ flask-philo-admin startproject 
 
 
-This will command will create a folder which will contain the basic structure of a
+This command will create a folder which will contain the basic structure of a
 Flask-Philo-Core application, basic unit tests and configuration:
 
 
 .. image:: _static/startproject.png
+
+
+Folder structure
+################
+
+The following folder structure is created for the new project:
+
+::
+
+    * README.md
+    * documentation
+    * src
+        * app
+            * __init__.py
+            * urls.py
+            * example_views
+        * config
+            * __init__.py
+            * settings.py
+        * console_commands
+            * __init__.py
+        * tests
+            * __init__.py
+            * test_views.py
+    * tools
+        * docker-compose.yml
+        * requirements.txt
+        * Dockerfile.python
+
+.. image:: _static/project_structure.png
+
+
+Start a Development Server
+###########################
+
+
+The following commands starts a development server:
+
+
+::
+
+    cd src
+    flask-philo runserver
+
+.. image:: _static/runserver.png
+
+
+You can use the following command to test if the web app is working:
+
+::
+
+    curl http://127.0.0.1:8080/example
+
+.. image:: _static/curl.png

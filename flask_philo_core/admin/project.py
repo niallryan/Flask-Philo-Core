@@ -33,8 +33,27 @@ def create_docker_files(location, project_extensions):
     create_from_template(**{
         'template_parameters': compose_params,
         'path': template_location,
+        'filename': 'Dockerfile.python',
+    })
+
+    create_from_template(**{
+        'template_parameters': compose_params,
+        'path': template_location,
         'filename': 'docker-compose.yml',
     })
+
+    create_from_template(**{
+        'template_parameters': compose_params,
+        'path': template_location,
+        'filename': 'Dockerfile.python',
+    })
+
+    if 'Flask-Philo-SQLAlchemy' in project_extensions:
+        create_from_template(**{
+            'template_parameters': compose_params,
+            'path': template_location,
+            'filename': 'Dockerfile.postgresql',
+        })
 
 
 def create_requirements_file(location, project_extensions):

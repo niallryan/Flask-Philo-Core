@@ -52,8 +52,8 @@ Flask-Philo-Core installation is pretty straightforward:
 pip3 install Flask-Philo-Core
 ```
 
-Creating a new project
-######################
+### Creating a new project
+
 
 Flask-Philo-Core includes the ``flask-philo-admin`` command line tool.
 
@@ -61,7 +61,50 @@ To quickly generate a new Flask-Philo project, navigate to the directory in whic
 
 ::
 
-    $ flask-philo-admin startproject <project_name>
+    $ flask-philo-admin startproject
 
 
-This will create a folder called <project_name> which will contain the basic structure of a Flask-Philo application, basic unit tests and configuration.
+This will create a folder called <project_name> which will contain the basic structure of a Flask-Philo-Core application, basic unit tests and configuration.
+
+
+The following folder structure is created for the new project:
+
+::
+
+    * README.md
+    * documentation
+    * src
+        * app
+            * __init__.py
+            * urls.py
+            * example_views
+        * config
+            * __init__.py
+            * settings.py
+        * console_commands
+            * __init__.py
+        * tests
+            * __init__.py
+            * test_views.py
+    * tools
+        * docker-compose.yml
+        * requirements.txt
+        * Dockerfile.python
+
+
+### Start a Development Server
+
+
+The following commands starts a development server:
+
+::
+
+    cd src
+    flask-philo runserver
+
+
+You can use the following command to test if the web app is working:
+
+::
+
+    curl http://127.0.0.1:8080/example
