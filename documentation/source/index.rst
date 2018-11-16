@@ -9,8 +9,9 @@ Welcome to Flask-Philo-Core's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
+   intro
 
 
 Indices and tables
