@@ -123,7 +123,6 @@ def initialize_src(location, project_extensions, project_name):
                 }
             })
 
-
     initialize_app()
 
 

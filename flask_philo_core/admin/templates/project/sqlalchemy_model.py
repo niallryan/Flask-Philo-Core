@@ -1,10 +1,5 @@
-from flask_philo_sqlalchemy.test import SQLAlchemyTestCase
 from flask_philo_sqlalchemy.orm import BaseModel
-from flask_philo_sqlalchemy.types import Password
-from sqlalchemy import Column, ForeignKey, Integer, String, Numeric, Boolean
-from sqlalchemy.orm import relationship
-from flask_philo_sqlalchemy.exceptions import NotFoundError
-
+from sqlalchemy import Column, Integer
 
 
 class User(BaseModel):
