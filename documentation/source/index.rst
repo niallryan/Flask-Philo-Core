@@ -13,6 +13,7 @@ Contents:
 
    intro
 
+   views
 
 Indices and tables
 ==================

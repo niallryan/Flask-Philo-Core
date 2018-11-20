@@ -39,8 +39,7 @@ it and extend it. We are willing to hear about your suggestions and improvements
 
 ## Python Support
 
-Flask-Philo-Core supports python3.6 or higher. There are not plans to provide
-support older python version.
+Flask-Philo-Core supports python3.6 or higher. There are no plans to support older Python versions.
 
 ## Quick Start
 
@@ -64,7 +63,7 @@ To quickly generate a new Flask-Philo project, navigate to the directory in whic
     $ flask-philo-admin startproject
 
 
-This will create a folder called <project_name> which will contain the basic structure of a Flask-Philo-Core application, basic unit tests and configuration.
+This will create a folder with the name you specified which will contain the basic structure of a Flask-Philo-Core application, basic unit tests and configuration.
 
 
 The following folder structure is created for the new project:
