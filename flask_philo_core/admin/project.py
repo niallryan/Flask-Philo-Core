@@ -113,6 +113,12 @@ def initialize_src(location, project_extensions, project_name):
             'filename': '__init__.py',
         })
 
+        template_location = os.path.join(location, 'src', 'commands')
+        create_from_template(**{
+            'path': template_location,
+            'filename': 'hello.py',
+        })
+
         if 'Flask-Philo-SQLAlchemy' in project_extensions:
             template_location = os.path.join(location, 'src', 'app')
             create_from_template(**{

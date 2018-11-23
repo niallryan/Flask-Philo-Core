@@ -15,6 +15,10 @@ Contents:
 
    views
 
+   unit_test
+
+   console_commands
+
 Indices and tables
 ==================
 
