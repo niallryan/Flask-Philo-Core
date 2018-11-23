@@ -33,8 +33,27 @@ def create_docker_files(location, project_extensions):
     create_from_template(**{
         'template_parameters': compose_params,
         'path': template_location,
+        'filename': 'Dockerfile.python',
+    })
+
+    create_from_template(**{
+        'template_parameters': compose_params,
+        'path': template_location,
         'filename': 'docker-compose.yml',
     })
+
+    create_from_template(**{
+        'template_parameters': compose_params,
+        'path': template_location,
+        'filename': 'Dockerfile.python',
+    })
+
+    if 'Flask-Philo-SQLAlchemy' in project_extensions:
+        create_from_template(**{
+            'template_parameters': compose_params,
+            'path': template_location,
+            'filename': 'Dockerfile.postgresql',
+        })
 
 
 def create_requirements_file(location, project_extensions):
@@ -52,7 +71,7 @@ def create_requirements_file(location, project_extensions):
     })
 
 
-def initialize_src(location):
+def initialize_src(location, project_extensions, project_name):
     # source code files
     folders = (
         'app', 'config', 'commands', 'tests')
@@ -93,6 +112,22 @@ def initialize_src(location):
             'path': template_location,
             'filename': '__init__.py',
         })
+
+        template_location = os.path.join(location, 'src', 'commands')
+        create_from_template(**{
+            'path': template_location,
+            'filename': 'hello.py',
+        })
+
+        if 'Flask-Philo-SQLAlchemy' in project_extensions:
+            template_location = os.path.join(location, 'src', 'app')
+            create_from_template(**{
+                'path': template_location,
+                'filename': 'sqlalchemy_model.py',
+                'template_parameters': {
+                    'project_name': project_name
+                }
+            })
 
     initialize_app()
 
@@ -153,4 +188,4 @@ def start_project():
     create_requirements_file(location, project_extensions)
 
     # create src files and directories
-    initialize_src(location)
+    initialize_src(location, project_extensions, project_name)
