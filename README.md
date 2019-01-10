@@ -6,7 +6,7 @@ Flask-Philo-Core is a Flask based framework that provides an out of the box
 structure for flask applications.
 
 You can check the official documentation
-[here](http://flask-philo.readthedocs.io/en/latest/)
+[here](https://flask-philo-core.readthedocs.io/en/latest/)
 
 
 ## Motivation
