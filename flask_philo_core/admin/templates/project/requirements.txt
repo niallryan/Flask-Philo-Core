@@ -1,11 +1,11 @@
 Flask-Philo-Core
-{% if SQLAlchemy %}
+{%- if SQLAlchemy %}
 Flask-Philo-SQLAlchemy
-{% endif %}
-{% if Redis %}
+{%- endif %}
+{%- if Redis %}
 Flask-Philo-Redis
-{% endif %}
-{% if Elasticsearch %}
+{%- endif %}
+{%- if Elasticsearch %}
 Flask-Philo-Elasticsearch
-{% endif %}
+{%- endif %}
 ipdb
