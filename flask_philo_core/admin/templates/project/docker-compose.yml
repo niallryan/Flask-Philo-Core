@@ -34,13 +34,16 @@ services:
       dockerfile: ./Dockerfile.python
     volumes:
       - ../:/philo
+  {% if SQLAlchemy or Redis or Elasticsearch %}
     links:
-{% if SQLAlchemy %}
+    {% if SQLAlchemy %}
       - postgresql:pgdb
-{% endif %}
-{% if Redis %}
+    {% endif %}
+    {% if Redis %}
       - redis:redisdb
-{% endif %}
-{% if Elasticsearch %}
+    {% endif %}
+    {% if Elasticsearch %}
       - elasticsearch:elasticsearchdb
-{% endif %}
+    {% endif %}
+  {% endif %}
+
