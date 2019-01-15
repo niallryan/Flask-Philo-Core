@@ -30,8 +30,8 @@ services:
 
   python:
     build:
-      context: ./
-      dockerfile: ./Dockerfile.python
+      context: ../
+      dockerfile: ./tools/Dockerfile.python
     volumes:
       - ../:/philo
   {% if SQLAlchemy or Redis or Elasticsearch %}
