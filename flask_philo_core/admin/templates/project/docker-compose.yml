@@ -1,6 +1,6 @@
 version: '3'
 services:
-{% if SQLAlchemy %}
+{%- if SQLAlchemy %}
   postgresql:
     build:
       context: ./
@@ -9,7 +9,7 @@ services:
       - 5432:5432
 {% endif %}
 
-{% if Redis %}
+{%- if Redis %}
   redis:
     build:
       context: ./
@@ -18,7 +18,7 @@ services:
       - 6379:6379
 {% endif %}
 
-{% if Elasticsearch %}
+{%- if Elasticsearch %}
   elasticsearch:
     build:
       context: ./
@@ -34,16 +34,15 @@ services:
       dockerfile: ./tools/Dockerfile.python
     volumes:
       - ../:/philo
-  {% if SQLAlchemy or Redis or Elasticsearch %}
+  {%- if SQLAlchemy or Redis or Elasticsearch %}
     links:
-    {% if SQLAlchemy %}
+    {%- if SQLAlchemy %}
       - postgresql:pgdb
-    {% endif %}
-    {% if Redis %}
+    {%- endif %}
+    {%- if Redis %}
       - redis:redisdb
-    {% endif %}
-    {% if Elasticsearch %}
+    {%- endif %}
+    {%- if Elasticsearch %}
       - elasticsearch:elasticsearchdb
-    {% endif %}
-  {% endif %}
-
+    {%- endif %}
+  {%- endif %}
