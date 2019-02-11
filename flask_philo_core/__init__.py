@@ -139,6 +139,11 @@ def execute_command(cmd, **kwargs):
         for cm in commands.__all__:
             if not cm.startswith('_'):
                 cmd_dict[cm] = 'commands.' + cm
+        import ipdb; ipdb.set_trace()
+        import console_commands
+        for cm in console_commands.__all__:
+            if not cm.startswith('_'):
+                cmd_dict[cm] = 'console_commands.' + cm
     except Exception:
         pass
 
